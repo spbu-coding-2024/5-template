@@ -1,0 +1,25 @@
+set(BMPLIB_DIR "bmp")
+file(GLOB BMPLIB_SOURCES "${BMPLIB_DIR}/*.c")
+add_library(bmp SHARED ${BMPLIB_SOURCES})
+include_directories(${BMPLIB_DIR})
+
+set(COMPARER_DIR "comparer")
+file(GLOB COMPARER_SOURCES "comparer/*.c")
+add_executable(comparer ${COMPARER_SOURCES})
+target_link_libraries(comparer PRIVATE bmp)
+
+set(CONVERTER_DIR "converter")
+file(GLOB CONVERTER_SOURCES "converter/*.c")
+add_executable(converter ${CONVERTER_SOURCES})
+target_link_libraries(converter PRIVATE bmp)
+
+if(MSVC)
+  target_compile_options(bmp PRIVATE /W4 /WX)
+  target_compile_options(converter PRIVATE /W4 /WX)
+  target_compile_options(comparer PRIVATE /W4 /WX)
+else()
+  target_compile_options(bmp PRIVATE -Wall -Wextra -pedantic -Werror)
+  target_compile_options(converter PRIVATE -Wall -Wextra -pedantic -Werror)
+  target_compile_options(comparer PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+
